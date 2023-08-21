@@ -1,6 +1,7 @@
 import { Navigate, Outlet, Route, Routes as Switch } from 'react-router-dom'
 import { useAuth } from 'modules/auth/context'
 import { Action, Auth, Home, Verification } from 'pages'
+import Game from 'pages/home/game'
 
 const Routes = () => {
   const { isAuthenticated, user } = useAuth()
@@ -8,7 +9,11 @@ const Routes = () => {
 
   return (
     <Switch>
-      <Route path="" element={isAuthenticated ? <Home /> : <Navigate to="/auth" />} />
+      <Route path="" element={isAuthenticated ? <Outlet /> : <Navigate to="/auth" />}>
+        <Route index element={<Home />} />
+        <Route path="game" element={user?.isVerified ? <Game /> : <Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Route>
 
       <Route path="auth" element={isAuthenticated ? <Navigate to="/" /> : <Outlet />}>
         <Route path="login" element={<Auth.Login />} />

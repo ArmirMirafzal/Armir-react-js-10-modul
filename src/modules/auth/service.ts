@@ -1,9 +1,10 @@
 import { auth, googleProvider } from 'config'
-// eslint-disable-next-line import/order
 import {
   applyActionCode,
+  confirmPasswordReset,
   createUserWithEmailAndPassword,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   updateProfile as baseUpdateProfile,
@@ -25,3 +26,7 @@ export const login = ({ email, password }: IForm.Login) => signInWithEmailAndPas
 export const sendVerification = () => sendEmailVerification(auth.currentUser!, { url: `${window.location.origin}/verification` })
 
 export const emailVerify = (oobCode: string) => applyActionCode(auth, oobCode)
+
+export const confirmPassword = (oobCode: string, newPassword: string) => confirmPasswordReset(auth, oobCode, newPassword)
+
+export const sendResetPassword = (email: string) => sendPasswordResetEmail(auth, email)

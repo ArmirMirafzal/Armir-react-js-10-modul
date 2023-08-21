@@ -6,7 +6,6 @@ import { notifications } from '@mantine/notifications'
 import { Service } from 'modules/auth'
 import { signInWithGoogle } from 'modules/auth/service'
 import { IForm } from 'modules/auth/types'
-// eslint-disable-next-line import/order
 import * as yup from 'yup'
 
 import { GoogleButton } from 'components'

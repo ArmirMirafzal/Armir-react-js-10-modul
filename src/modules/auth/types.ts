@@ -16,9 +16,6 @@ export namespace IForm {
     email: string
     password: string
   }
-  export interface confirmResetPassword {
-    password: string;
-  }
 }
 
 export namespace IContext {
