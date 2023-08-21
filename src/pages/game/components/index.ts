@@ -1,1 +1,1 @@
-export {default as Navbar} from "./navbar";
+export { default as ChessBoard } from "./chess-board";

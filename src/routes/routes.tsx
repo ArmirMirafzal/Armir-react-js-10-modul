@@ -19,6 +19,12 @@ const Routes = (props: RoutesProps) => {
   return (
     <BrowserRouter>
       <BaseRoutes>
+        {/* HOME PAGE */}
+        <Route path="" element={<Protected allow={isAuthenticated} navigate="/auth/login" />}>
+          <Route index element={<Chess />} />
+          <Route path="*" element={<Chess />} />
+        </Route>
+
         {/* USERS */}
         <Route path="auth" element={<Protected allow={!isAuthenticated} navigate="/" />}>
           <Route path="login" element={<Auth.Login />} />
@@ -26,12 +32,6 @@ const Routes = (props: RoutesProps) => {
           <Route path="forgot-password" element={<Auth.ForgotPassword />} />
           <Route path="reset-password" element={<Auth.ResetPassword />} />
           <Route path="*" element={<Navigate to="/auth/login" />} />
-        </Route>
-
-        {/* HOME PAGE */}
-        <Route path="" element={<Protected allow={isAuthenticated} navigate="/auth/login" />}>
-          <Route index element={<Chess />} />
-          <Route path="*" element={<Chess />} />
         </Route>
       </BaseRoutes>
     </BrowserRouter>

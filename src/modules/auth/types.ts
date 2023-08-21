@@ -2,16 +2,21 @@ import { Auth } from "firebase/auth";
 import { FirebaseStorage } from "firebase/storage";
 
 export namespace IEntity {
- export interface User {
-   email: string;
-   username: string;
-   password: string;
-}}
+  export interface User {
+    email: string;
+    username: string;
+    password: string;
+  }
+}
 
 export namespace IForm {
-  export interface Auth {
+  export interface Login {
     email: string;
     password: string;
+  }
+
+  export interface Register extends Login {
+    name: string
   }
   export interface sendResetPassword {
     email: string;
@@ -22,6 +27,6 @@ export namespace IForm {
 }
 
 export interface IContext {
-  auth: Auth
-  firestore: FirebaseStorage
+  auth: Auth;
+  firestore: FirebaseStorage;
 }

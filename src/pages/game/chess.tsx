@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { Navbar } from "./components";
+import { Navbar } from "components";
 import { Context } from "../..";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { ChessBoard } from "./components";
 interface ChessProps {}
 
 const Chess = (props: ChessProps) => {
@@ -11,6 +12,9 @@ const Chess = (props: ChessProps) => {
   return (
     <>
       <Navbar auth={auth} />
+      <div id="app">
+        <ChessBoard />
+      </div>
     </>
   );
 };

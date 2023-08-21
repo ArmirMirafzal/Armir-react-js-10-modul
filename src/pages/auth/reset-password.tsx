@@ -40,15 +40,15 @@ const ResetPassword = (props: ResetPasswordProps) => {
   return (
     <Box h="100vh">
       <Flex h="100%" align="center" justify="center">
-        <Paper w={400} bg="#eee" p={20}>
-          <form onSubmit={onSubmit(handleSubmit)}>
+        <Paper shadow="0px 0px 17px 5px rgba(0, 40, 255, 0.3)" h={340} bg="#131720" w={420} p={20}>
+          <form style={{paddingTop: "20px"}} onSubmit={onSubmit(handleSubmit)}>
             <Flex direction="column" align="center" gap={20}>
-              <Title>ResetPassword</Title>
-              <PasswordInput radius="lg" w="100%" size="lg" placeholder="password" {...getInputProps("password")} />
-              <Button type="submit" radius="md" w="55%">
+              <Title sx={{paddingBottom: "20px"}} color="#fff">ResetPassword</Title>
+              <PasswordInput radius="lg" w="100%" size="md" placeholder="password" {...getInputProps("password")} />
+              <Button mt="15px" type="submit" radius="md" w="55%">
                 confirm ResetPassword
               </Button>
-              <Link to="/auth/login" children="Login" />
+              <Link style={{ textDecoration: "none", color: "#228BE6" }} to="/auth/login" children="Login" />
             </Flex>
           </form>
         </Paper>
