@@ -1,71 +1,72 @@
-import * as yup from "yup";
-import { useContext } from "react";
-import { Context } from "../..";
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Flex, Input, Paper, PasswordInput, Space, Title } from "@mantine/core";
-import { FcGoogle } from "react-icons/fc";
-import { toast } from "react-hot-toast";
-import { useForm, yupResolver } from "@mantine/form";
-import { Types } from "../../modules/auth";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Anchor, Button, Container, Divider, Group, Paper, PasswordInput, Stack, Text, TextInput } from '@mantine/core'
+import { useForm, yupResolver } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
+import { Service } from 'modules/auth'
+import { signInWithGoogle } from 'modules/auth/service'
+import { IForm } from 'modules/auth/types'
+import * as yup from 'yup'
+
+import { GoogleButton } from 'components'
 
 const schema = yup.object({
-  email: yup.string().min(4).label("Email").required(),
-  password: yup.string().min(5).label("Password").required(),
-});
+  email: yup.string().email().label('Email').required(),
+  password: yup.string().min(6).label('Password').required()
+})
 
 const Login = () => {
-  const { getInputProps, onSubmit } = useForm<Types.IForm.Auth>({ validate: yupResolver(schema) });
-  const navigate = useNavigate();
-  const { auth } = useContext(Context);
+  const navigate = useNavigate()
+  const [loading, setLoading] = React.useState(false)
+  const form = useForm<IForm.Login>({
+    initialValues: { email: '', password: '' },
+    validate: yupResolver(schema)
+  })
 
-  const loginWithGoogle = async () => {
+  const onSubmit = async (values: IForm.Login) => {
     try {
-      const provider = new GoogleAuthProvider();
-      const { user } = await signInWithPopup(auth, provider);
-      toast.success(`👋 hello ${user.displayName?.split(" ")[0]}`);
-      navigate("/");
-    } catch (err: any) {}
-  };
-
-  const handleSubmit = async ({ email, password }: Types.IForm.Auth) => {
-    try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      const username = user.displayName?.split(" ")[0];
-      toast.success(`👋 hello ${username ? username : "new user"}`);
-      navigate("/");
+      setLoading(true)
+      await Service.login(values)
     } catch (err: any) {
-      toast.error(err?.message);
+      notifications.show({ message: err?.message, color: 'red' })
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <Box h="100vh">
-      <Flex h="100%" align="center" justify="center">
-        <Paper w={400} bg="#eee" p={20}>
-          <form onSubmit={onSubmit(handleSubmit)}>
-            <Flex direction="column" align="center" gap={20}>
-              <Title>Login</Title>
-              <Input radius="lg" w="100%" size="lg" type="email" placeholder="email" {...getInputProps("email")} />
-              <Flex w="100%" direction="column" align="start">
-                <PasswordInput radius="lg" w="100%" size="lg" placeholder="password" {...getInputProps("password")} />
-                <Link to="/auth/forgot-password" children="Forgot password" />
-              </Flex>
-              <Button type="submit" radius="md" w="50%">
-                Login
-              </Button>
-              <Button variant="default" onClick={loginWithGoogle} radius="md" w="70%">
-                <FcGoogle size={20} />
-                <Space w="xs" />
-                Sign in with google
-              </Button>
-              <Link to="/auth/register" children="Don't have an account?" />
-            </Flex>
-          </form>
-        </Paper>
-      </Flex>
-    </Box>
-  );
-};
+    <Container size={420} my={40}>
+      <Paper radius="md" p="xl" withBorder>
+        <Text size="lg" weight={500} sx={{ textAlign: 'center' }}>
+          Welcome to Chess Game
+        </Text>
 
-export default Login;
+        <Group grow mb="md" mt="md">
+          <GoogleButton radius="xl" onClick={signInWithGoogle}>
+            Google
+          </GoogleButton>
+        </Group>
+
+        <Divider label="Or continue with email" labelPosition="center" my="lg" />
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <Stack>
+            <TextInput label="Email" placeholder="Your email address" radius="md" {...form.getInputProps('email')} />
+
+            <PasswordInput label="Password" placeholder="Your password" radius="md" {...form.getInputProps('password')} />
+          </Stack>
+
+          <Group position="apart" mt="xl">
+            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/register')} size="xs">
+              Don't have an account? Register
+            </Anchor>
+            <Button loading={loading} type="submit" radius="xl">
+              Login
+            </Button>
+          </Group>
+        </form>
+      </Paper>
+    </Container>
+  )
+}
+
+export default Login

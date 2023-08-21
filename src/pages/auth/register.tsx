@@ -1,52 +1,81 @@
-import * as yup from "yup";
-import { useContext } from "react";
-import { Context } from "../..";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Flex, Input, Paper, PasswordInput, Title } from "@mantine/core";
-import { toast } from "react-hot-toast";
-import { useForm, yupResolver } from "@mantine/form";
-import { Types } from "../../modules/auth";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Anchor, Button, Container, Divider, Group, Paper, PasswordInput, Stack, Text, TextInput } from '@mantine/core'
+import { useForm, yupResolver } from '@mantine/form'
+import { notifications } from '@mantine/notifications'
+import { AuthErrorCodes } from 'firebase/auth'
+import { Service } from 'modules/auth'
+import { useAuth } from 'modules/auth/context'
+import { IForm } from 'modules/auth/types'
+import * as yup from 'yup'
+
+import { GoogleButton } from 'components'
 
 const schema = yup.object({
-  email: yup.string().min(4).label("Email").required(),
-  password: yup.string().min(5).label("Password").required(),
-});
+  name: yup.string().min(5).label('Name').required(),
+  email: yup.string().email().label('Email').required(),
+  password: yup.string().min(6).label('Password').required()
+})
 
 const Register = () => {
-  const { getInputProps, onSubmit } = useForm<Types.IForm.Auth>({ validate: yupResolver(schema) });
-  const navigate = useNavigate();
-  const { auth } = useContext(Context);
+  const { methods } = useAuth()
+  const [loading, setLoading] = React.useState(false)
+  const navigate = useNavigate()
+  const form = useForm<IForm.Register>({
+    initialValues: { name: '', email: '', password: '' },
+    validate: yupResolver(schema)
+  })
 
-  const handleSubmit = async ({ email, password }: Types.IForm.Auth) => {
+  const onSubmit = async ({ name, password, email }: IForm.Register) => {
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(user);
-      navigate("/auth/login");
+      setLoading(true)
+      const { user } = await Service.register({ email, password })
+
+      await Service.updateProfile(user, { name })
+
+      methods.update({ name, isVerified: false, email })
     } catch (err: any) {
-      toast.error(err?.message);
+      if (err?.code === AuthErrorCodes.EMAIL_EXISTS) {
+        notifications.show({ message: `this email ${email} already exist`, color: 'red' })
+      } else notifications.show({ message: err?.message, color: 'red' })
+    } finally {
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <Box h="100vh">
-      <Flex h="100%" align="center" justify="center">
-        <Paper w={400} bg="#eee" p={20}>
-          <form onSubmit={onSubmit(handleSubmit)}>
-            <Flex direction="column" align="center" gap={20}>
-              <Title>Register</Title>
-              <Input radius="lg" w="100%" size="lg" type="email" placeholder="email" {...getInputProps("email")} />
-              <PasswordInput radius="lg" w="100%" size="lg" placeholder="password" {...getInputProps("password")} />
-              <Button type="submit" radius="md" w="50%">
-                Register
-              </Button>
-              <Link to="/auth/login" children="Already have an account?" />
-            </Flex>
-          </form>
-        </Paper>
-      </Flex>
-    </Box>
-  );
-};
+    <Container size={420} my={40}>
+      <Paper radius="md" p="xl" withBorder>
+        <Text size="lg" weight={500} sx={{ textAlign: 'center' }}>
+          Welcome to Chess Game
+        </Text>
 
-export default Register;
+        <Group grow mb="md" mt="md">
+          <GoogleButton radius="xl" onClick={Service.signInWithGoogle}>
+            Google
+          </GoogleButton>
+        </Group>
+
+        <Divider label="Or continue with email" labelPosition="center" my="lg" />
+
+        <form onSubmit={form.onSubmit(onSubmit)}>
+          <Stack>
+            <TextInput label="Name" placeholder="Your name" radius="md" {...form.getInputProps('name')} />
+            <TextInput label="Email" placeholder="Your email address" radius="md" {...form.getInputProps('email')} />
+            <PasswordInput label="Password" placeholder="Your password" radius="md" {...form.getInputProps('password')} />
+          </Stack>
+          <Group position="apart" mt="xl">
+            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/login')} size="xs">
+              Already have an account? Login
+            </Anchor>
+            <Button loading={loading} type="submit" radius="xl">
+              Register
+            </Button>
+          </Group>
+        </form>
+      </Paper>
+    </Container>
+  )
+}
+
+export default Register

@@ -1,30 +1,22 @@
-import { MantineProvider } from '@mantine/core';
-import ReactDOM from "react-dom/client";
-import "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getStorage } from 'firebase/storage';
-import { createContext } from "react";
-import { Types } from "./modules/auth";
-import { Routes } from "./routes";
-import "./assets/main.css";
-import { Toaster } from 'react-hot-toast';
-import { config } from './config';
+import { BrowserRouter } from 'react-router-dom'
+import { MantineProvider } from '@mantine/core'
+import { Notifications } from '@mantine/notifications'
+import ReactDOM from 'react-dom/client'
+import Routes from 'routes'
 
-const app = initializeApp(config.firebaseConfig);
+import * as Containers from 'containers'
 
-const auth = getAuth(app);
-const firestore = getStorage(app);
+import 'bootstrap/dist/css/bootstrap.min.css'
 
-export const Context = createContext<Types.IContext>({} as Types.IContext);
-
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
-	<MantineProvider withGlobalStyles withNormalizeCSS>
-	<Context.Provider value={{auth, firestore}}>
-	<Toaster position="top-center"/>
-	<Routes/>
-	</Context.Provider>
-	</MantineProvider>
-);
+  <BrowserRouter>
+    <Containers.Auth>
+      <MantineProvider withNormalizeCSS>
+        <Routes />
+        <Notifications position="top-right" />
+      </MantineProvider>
+    </Containers.Auth>
+  </BrowserRouter>
+)
