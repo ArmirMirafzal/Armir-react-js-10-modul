@@ -7,6 +7,7 @@ import { AuthErrorCodes } from 'firebase/auth'
 import { Service } from 'modules/auth'
 import { useAuth } from 'modules/auth/context'
 import { IForm } from 'modules/auth/types'
+// eslint-disable-next-line import/order
 import * as yup from 'yup'
 
 import { GoogleButton } from 'components'

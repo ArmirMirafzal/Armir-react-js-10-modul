@@ -14,7 +14,7 @@ const schema = yup.object({
 });
 
 const ForgotPassword = () => {
-  const { getInputProps, onSubmit } = useForm<Types.IForm.sendResetPassword>({ validate: yupResolver(schema) });
+  const { getInputProps, onSubmit } = useForm<Types.IForm.confirmResetPassword>({ validate: yupResolver(schema) });
   const { auth } = useContext(Context);
 
   const handleSubmit = async ({ email }: Types.IForm.sendResetPassword) => {
