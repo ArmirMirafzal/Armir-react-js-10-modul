@@ -2,6 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LoadingOverlay } from '@mantine/core'
 import { emailVerify } from 'modules/auth/service'
+// eslint-disable-next-line import/order
 import queryString from 'query-string'
 
 interface ActionProps {}

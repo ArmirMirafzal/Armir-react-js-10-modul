@@ -1,4 +1,5 @@
 import { auth, googleProvider } from 'config'
+// eslint-disable-next-line import/order
 import {
   applyActionCode,
   createUserWithEmailAndPassword,
