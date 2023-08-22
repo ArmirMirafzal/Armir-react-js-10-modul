@@ -42,9 +42,7 @@ const Login = () => {
         </Text>
 
         <Group grow mb="md" mt="md">
-          <GoogleButton radius="xl" onClick={signInWithGoogle}>
-            Google
-          </GoogleButton>
+          <GoogleButton radius="xl" onClick={signInWithGoogle} children="Google" />
         </Group>
 
         <Divider label="Or continue with email" labelPosition="center" my="lg" />
@@ -55,13 +53,21 @@ const Login = () => {
             <PasswordInput label="Password" placeholder="Your password" radius="md" {...form.getInputProps('password')} />
           </Stack>
 
+          <Anchor
+            sx={{ marginTop: '10px' }}
+            component="button"
+            type="button"
+            color="dimmed"
+            onClick={() => navigate('/forgotPassword')}
+            size="sm"
+            children="Forgot Password"
+          />
+
           <Group position="apart" mt="xl">
-            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/register')} size="xs">
+            <Anchor component="button" type="button" color="dimmed" onClick={() => navigate('/auth/register')} size="sm">
               Don't have an account? Register
             </Anchor>
-            <Button loading={loading} type="submit" radius="xl">
-              Login
-            </Button>
+            <Button loading={loading} type="submit" radius="xl" children="Login" />
           </Group>
         </form>
       </Paper>

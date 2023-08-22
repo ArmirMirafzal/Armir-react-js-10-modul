@@ -29,4 +29,4 @@ export const emailVerify = (oobCode: string) => applyActionCode(auth, oobCode)
 
 export const confirmPassword = (oobCode: string, newPassword: string) => confirmPasswordReset(auth, oobCode, newPassword)
 
-export const sendResetPassword = (email: string) => sendPasswordResetEmail(auth, email)
+export const sendResetPasswordLink = (email: string) => sendPasswordResetEmail(auth, email)

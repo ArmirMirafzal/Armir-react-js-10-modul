@@ -1,7 +1,9 @@
 import { Navigate, Outlet, Route, Routes as Switch } from 'react-router-dom'
 import { useAuth } from 'modules/auth/context'
-import { Action, Auth, Home, Verification } from 'pages'
+import { Action, Auth, ForgotPassword,Home, Verification } from 'pages'
 import Game from 'pages/home/game'
+
+import ChessBoard from './pages/home/components/chess-board';
 
 const Routes = () => {
   const { isAuthenticated, user } = useAuth()
@@ -22,6 +24,8 @@ const Routes = () => {
       </Route>
 
       <Route path="verification" element={isAuthenticated && !isVerified ? <Verification /> : <Navigate to="/" />} />
+      <Route path="forgotPassword" element={!isAuthenticated ? <ForgotPassword /> : <Navigate to="/" />} />
+      <Route path="chessboard" element={<ChessBoard />} />
 
       <Route path="action" element={<Action />} />
       <Route path="*" element={<Navigate to="/" />} />
