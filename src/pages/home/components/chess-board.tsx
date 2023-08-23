@@ -4,10 +4,6 @@ import { alert } from 'utils'
 
 import { Navbar } from 'components'
 
-// import { List } from "components";
-
-// import { default as CellProps } from "./cell-props";
-
 interface Option {
   label: string
   value: string
@@ -68,20 +64,19 @@ const Board = () => {
 
   const onSelectCell = (idx: number, index: number) => {
     // setBoard([]);
-    const arr: string[][] = [...board]
+    const newBoard: string[][] = [...board]
 
-    if (arr[idx][index]) {
+    if (newBoard[idx][index]) {
       alert.error('already has been')
-    } else {
-      arr[idx][index] = selectValue
-      if (selectValue === '♜') {
-        alert.error('A ♖ is already present on the chessboard.')
-        arr[idx][index] = selectValue
-        setBoard(arr)
-      }
+      return
     }
+    if (selectValue === '♜' && newBoard.some(row => row.includes('♜'))) {
+      alert.error('A ♖ is already present on the chessboard.')
+      return
+    }
+    newBoard[idx][index] = selectValue
 
-    setBoard(arr)
+    setBoard(newBoard)
   }
 
   const onReset = () => {
@@ -91,9 +86,9 @@ const Board = () => {
   return (
     <>
       <Navbar />
-      <Flex sx={{ alignItems: 'center', gap: 100, marginTop: 40, marginBottom: 70 }}>
-        <Box sx={{ display: 'grid', placeItems: 'center' }}>
-          <Title sx={{ fontWeight: 400, color: '#1A1A1A' }}>Captures</Title>
+      <Flex sx={{ alignItems: 'center', gap: 100, marginLeft: 200, marginTop: 40, paddingBottom: 70 }}>
+        <Box sx={{ display: 'flex', placeItems: 'center' }}>
+          <Title sx={{ fontWeight: 400, color: '#1A1A1A' }}>Count</Title>
           <Text sx={{ color: '#67FDAF', fontSize: 70, fontWeight: 500 }}>{capturesNumber(board)}</Text>
         </Box>
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)' }}>
@@ -105,8 +100,8 @@ const Board = () => {
                   sx={{
                     display: 'grid',
                     placeItems: 'center',
-                    width: 75,
-                    height: 75,
+                    width: 65,
+                    height: 65,
                     backgroundColor: `${
                       // eslint-disable-next-line no-nested-ternary
                       idx % 2 === 0 ? (index % 2 !== 0 ? '#67FDAF' : '#fff') : idx % 2 !== 0 && index % 2 !== 0 ? '#fff' : '#67FDAF'
@@ -117,7 +112,6 @@ const Board = () => {
                       // eslint-disable-next-line no-nested-ternary
                       idx % 2 === 0 ? (index % 2 !== 0 ? '1px solid #1A1A1A' : '') : idx % 2 !== 0 && index % 2 !== 0 ? '' : '1px solid #1A1A1A'
                     }`,
-                    borderRadius: '4px',
                     cursor: 'pointer'
                   }}
                   children={value}
