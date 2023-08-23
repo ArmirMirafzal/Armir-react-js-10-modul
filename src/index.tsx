@@ -6,7 +6,7 @@ import Routes from 'routes'
 
 import * as Containers from 'containers'
 
-import "./assets/main.css"
+import './assets/main.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
