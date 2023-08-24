@@ -19,7 +19,7 @@ const Board = () => {
     { label: '♜', value: '♜' },
     { label: '♙', value: '♙' },
     { label: '♝', value: '♝' },
-    { label: '🗑️', value: '🗑️' }
+    { label: '🗑️', value: '' }
   ]
 
   // console.log("CellProps", CellProps);
@@ -62,11 +62,11 @@ const Board = () => {
     setSelectLast(value)
   }
 
-  const onSelectCell = (idx: number, index: number) => {
+  const onSelectCell = (idx: number, index: number, value: string) => {
     // setBoard([]);
     const newBoard: string[][] = [...board]
 
-    if (newBoard[idx][index]) {
+    if (newBoard[idx][index] !== '' && value !== '') {
       alert.error('already has been')
       return
     }
@@ -88,8 +88,8 @@ const Board = () => {
       <Navbar />
       <Flex sx={{ alignItems: 'center', gap: 100, marginLeft: 200, marginTop: 40, paddingBottom: 70 }}>
         <Box sx={{ display: 'flex', placeItems: 'center' }}>
-          <Title sx={{ fontWeight: 400, color: '#1A1A1A' }}>Count</Title>
-          <Text sx={{ color: '#67FDAF', fontSize: 70, fontWeight: 500 }}>{capturesNumber(board)}</Text>
+          <Title sx={{ fontWeight: 400, color: '#1A1A1A' }}>Count: </Title>
+          <Text sx={{ color: '#67FDAF', fontSize: 40, fontWeight: 500, marginLeft: 20 }}>{capturesNumber(board)}</Text>
         </Box>
         <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)' }}>
           {board.map((item, idx) => (
@@ -115,7 +115,7 @@ const Board = () => {
                     cursor: 'pointer'
                   }}
                   children={value}
-                  onClick={() => onSelectCell(idx, index)}
+                  onClick={() => onSelectCell(idx, index, value)}
                 />
               ))}
             </React.Fragment>
@@ -123,7 +123,7 @@ const Board = () => {
         </Box>
         <Box sx={{ display: 'grid', gap: 30 }}>
           <Button
-            sx={{ color: '#1A1A1A', backgroundColor: '#67FDAF', fontWeight: 400, fontSize: 35, border: '1px solid ##1A1A1A' }}
+            sx={{ color: '#1A1A1A', backgroundColor: '#67FDAF', fontWeight: 400, fontSize: 25, border: '1px solid ##1A1A1A' }}
             onClick={onReset}
           >
             Clear
