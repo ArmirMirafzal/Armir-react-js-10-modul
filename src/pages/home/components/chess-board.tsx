@@ -62,21 +62,21 @@ const Board = () => {
     setSelectLast(value)
   }
 
-  const onSelectCell = (idx: number, index: number, value: string) => {
-    // setBoard([]);
-    const newBoard: string[][] = [...board]
+  const onSelectCell = (rowIdx: number, colIdx: number) => {
+    const arr: string[][] = [...board]
 
-    if (newBoard[idx][index] !== '' && value !== '') {
-      alert.error('already has been')
+    if (arr[rowIdx][colIdx] && selectValue !== '') {
+      alert.error('this is already on the board')
       return
     }
-    if (selectValue === '♜' && newBoard.some(row => row.includes('♜'))) {
-      alert.error('A ♖ is already present on the chessboard.')
+    if (selectValue === '♜' && arr.some(row => row.includes('♜'))) {
+      alert.error('A ♜ is already present on the chessboard.')
       return
+    } else {
+      arr[rowIdx][colIdx] = selectValue
     }
-    newBoard[idx][index] = selectValue
 
-    setBoard(newBoard)
+    setBoard(arr)
   }
 
   const onReset = () => {
@@ -115,7 +115,7 @@ const Board = () => {
                     cursor: 'pointer'
                   }}
                   children={value}
-                  onClick={() => onSelectCell(idx, index, value)}
+                  onClick={() => onSelectCell(idx, index)}
                 />
               ))}
             </React.Fragment>

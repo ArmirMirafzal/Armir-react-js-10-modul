@@ -4,7 +4,7 @@ import { LoadingOverlay } from '@mantine/core'
 import { emailVerify } from 'modules/auth/service'
 import queryString from 'query-string'
 
-import ResetPassword from './reset-password'
+import ResetPassword from './auth/reset-password'
 
 interface ActionProps {}
 
